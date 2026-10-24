@@ -1,0 +1,96 @@
+---
+title: Daily digest for Teams, Outlook, Jira, and Confluence
+description: Build a weekday routine that summarizes unanswered messages, open commitments, and upcoming Jira deadlines, with example output and troubleshooting.
+---
+ 
+This guide builds the full workplace version of the daily digest. Every weekday morning, Claude checks Outlook, Microsoft Teams, Jira, and Confluence and gives you one summary of what needs your attention.
+ 
+If this is your first routine, start with the [Quickstart](/quickstart).
+ 
+## What you need
+ 
+- A paid Claude plan (Pro, Max, Team, or Enterprise)
+- The Microsoft 365 (Outlook and Teams) and Atlassian (Jira and Confluence) connectors turned on. Go to **Settings > Connectors** and enable both.
+![The Connectors list in Claude Desktop showing Atlassian and Microsoft 365 connected](/images/connectors.png)
+ 
+## Set up the routine
+ 
+This takes about two minutes.
+ 
+1. Open Claude Desktop and go to **Claude Code**.
+2. Click **Routines** in the left sidebar.
+3. Create a new routine or scheduled task and paste the prompt from the next section into the instructions field.
+4. Set the cadence to **Weekdays** and choose **Cloud** (remote), not local, so it runs even if your laptop is off or asleep.
+5. On the **Behavior** tab, review how the routine runs. If a permission or approval setting is offered, choose the most restrictive one that still lets the digest run unattended.
+6. On the **Notifications** tab, choose how you want to be told when the digest is ready, for example a desktop notification. Also check that your operating system allows notifications from Claude. Without that, you may not notice the digest until you open the app.
+7. Click **Save**.
+You can edit, pause, or delete the routine at any time from the **Routines** page.
+ 
+## The prompt
+ 
+```text
+Every weekday (Monday to Friday) morning, check my pending work and flag
+everything that needs my attention:
+ 
+1. Outlook Email: main check, every day.
+   Search my inbox for the last 24 hours (last 72 hours on Monday, to
+   cover the weekend) for:
+   - Emails where I was directly asked something (not a group CC where
+     anyone could answer) and I haven't replied.
+   - Emails I sent asking someone something, where I never got a reply
+     (follow-up candidates).
+   List sender, subject, roughly when, and what's being asked.
+ 
+2. Microsoft Teams: main check, every day.
+   Search all my chats, group chats, and channels from the last 24 hours
+   (last 72 hours on Monday) for:
+   - Any message directed at me (a question, "can you...", a direct ask,
+     or my name mentioned in a request) that I haven't replied to or
+     reacted to yet.
+   - Any commitment I made ("I'll do X", "I'll get back to you on Y")
+     that doesn't look closed out yet.
+   List each one with who asked, roughly when, which chat or channel, and
+   what's being asked.
+ 
+3. Jira: run the JQL "assignee = currentUser() AND statusCategory != Done
+   ORDER BY duedate ASC" on YOUR-SITE.atlassian.net and list key,
+   summary, status, and due date.
+ 
+4. Confluence: quick search for pages mentioning me with an unresolved
+   action item from the last few days.
+ 
+5. Optional: if your team keeps a shared action-item tracker (a weekly
+   file, a Confluence page, a standing doc), name it here so the routine
+   cross-checks it and flags anything the scans above did not surface.
+ 
+Group the output by: Due today/soon, Awaiting my reply, Open commitments,
+Everything else. Put the newest and most urgent first. Keep it tight.
+```
+ 
+### Customize the prompt
+ 
+- `currentUser()` and "my inbox" and "my chats" resolve to the account the routine runs on, so you do not need to enter your name.
+- Replace `YOUR-SITE.atlassian.net` with your team's Jira cloud site.
+- If you do not use a shared tracker, delete item 5.
+- Adjust any step to fit how you work.
+## What the digest looks like
+ 
+Each run opens with a short note on what Claude did, for example that it sent a notification and that every action was read-only. The digest then groups items under four headings, with the newest and most urgent first:
+ 
+- **Due today/soon:** Jira tickets and tasks due now or shortly, with the key, a short title, and the due date.
+- **Awaiting my reply:** emails and Teams messages that ask you something, showing who asked, where, roughly when, and what they want.
+- **Open commitments:** things you said you would do that do not look closed yet.
+- **Everything else:** other items worth knowing about, such as Confluence mentions.
+The **Runs** panel lists every run with its time, its status, and whether it was scheduled or started manually. Select a run to read that day's digest.
+ 
+![The Runs panel listing completed scheduled and manual runs of the Daily To-Do's routine](/images/runs-panel.png)
+ 
+## Troubleshooting
+ 
+| Problem | Likely cause | Fix |
+|---|---|---|
+| The digest is empty | A connector is off, or nothing matched the time window | Check **Settings > Connectors**, then run the routine manually and read the run details |
+| The routine did not run at the scheduled time | It was set to run locally and the laptop was asleep | Edit the routine and choose **Cloud** |
+| You never see the digest | Notifications are blocked for Claude | Allow Claude notifications in your system settings, or open the **Runs** panel directly |
+| The Jira section fails or is missing | The Atlassian connector is not authorized, or the site name is wrong | Reconnect Atlassian and check that your Jira site name in the prompt is correct |
+| The digest is too long or noisy | The prompt is too broad | Shorten the time window or add "keep it tight" and a maximum number of items per heading |

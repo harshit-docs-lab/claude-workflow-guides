@@ -1,47 +1,58 @@
 ---
 title: Quickstart
-description: Guide a new reader through one useful workflow and show them how to verify it.
+description: Build your first daily digest routine with one connector and see a working result in about five minutes.
 ---
-
-A strong quickstart produces one meaningful result. Replace the placeholders
-below with the shortest supported path for your product.
-
+ 
+In this quickstart you will create a routine that checks your email every weekday morning and lists the messages that are waiting for your reply. It uses a single connector, so you can finish quickly. When it works, you can extend it with the [full workplace guide](/daily_digest_guide)
+ 
 ## Before you begin
+ 
+- A paid Claude plan (Pro, Max, Team, or Enterprise)
+- Claude Desktop installed and signed in
+- An email account that Claude can connect to
 
-List only the requirements needed for this workflow:
-
-- An account or credential, when required
-- A supported runtime, device, browser, or operating system
-- Permission to create or change the resource used in the example
-
-<Steps>
-  <Step title="Install the required tool">
-    Give readers one recommended installation command.
-
-    ```bash
-    npm install your-package
-    ```
-  </Step>
-  <Step title="Add the minimum configuration">
-    Include only the values needed for the first successful run.
-
-    ```bash
-    your-cli init
-    ```
-  </Step>
-  <Step title="Complete the first task">
-    Use a realistic example that produces an observable result.
-
-    ```bash
-    your-cli start
-    ```
-  </Step>
-  <Step title="Verify the result">
-    State exactly what the reader should see and how to recover when it does not appear.
-  </Step>
-</Steps>
-
-## Choose the next task
-
-Link to the guide that naturally follows this result. Avoid ending the reader’s
-journey with a generic list of every feature.
+## Step 1: Turn on an email connector
+ 
+1. Open Claude Desktop and go to **Settings > Connectors**.
+2. Enable the connector for your email account, for example Gmail or Microsoft 365 (Outlook).
+3. Sign in when asked and approve access.
+## Step 2: Create the routine
+ 
+1. Open **Claude Code** in Claude Desktop.
+2. Click **Routines** in the left sidebar.
+3. Create a new routine and paste the prompt below into the instructions field.
+![The New routine screen in Claude Desktop, showing the instructions field, the trigger options, and the Connectors, Behavior and Notifications tabs](/images/routine-setup.png)
+ 
+```text
+Every weekday (Monday to Friday) morning, check my email and flag
+everything that needs my attention.
+ 
+Search my inbox for the last 24 hours (last 72 hours on Monday, to
+cover the weekend) for:
+- Emails where I was directly asked something and I have not replied.
+- Emails I sent asking someone something, where I never got a reply.
+ 
+List the sender, subject, roughly when, and what is being asked.
+Group the output under "Awaiting my reply" and "Waiting on others".
+Put the newest and most urgent first. Keep it short.
+```
+ 
+## Step 3: Schedule it
+ 
+1. Set the cadence to **Weekdays**.
+2. Choose **Cloud** (remote), not local, so it still runs when your laptop is asleep.
+3. On the **Notifications** tab, choose how you want to be told when a run finishes.
+4. Click **Save**.
+## Step 4: Run it once and check the result
+ 
+You do not need to wait until tomorrow morning.
+ 
+1. Open the routine and start a run manually.
+2. Open the **Runs** panel and select the run.
+3. Read the digest. You should see your unanswered emails grouped under the two headings.
+If the digest appears, your routine works. If it is empty or fails, see [Troubleshooting](/daily_digest_guide#troubleshooting).
+ 
+## Next steps
+ 
+- Add Teams, Jira, and Confluence with the [full workplace guide](/daily_digest_guide).
+- Change the prompt to fit your day. You can edit, pause, or delete the routine at any time from the **Routines** page.
