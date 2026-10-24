@@ -159,7 +159,7 @@ const brandPresets: Record<BrandPresetKey, BrandConfig> = {
 
 const brandPreset: BrandPresetKey = 'primary'
 
-export const siteConfig: SiteConfig = {
+const templateSiteConfig: SiteConfig = {
   name: 'Documentation',
   description:
     'Clear, task-focused guidance for building with the product.',
@@ -172,3 +172,17 @@ export const siteConfig: SiteConfig = {
   brandPreset,
   brandPresets,
 }
+
+// Managed by Thally Cloud onboarding.
+export const siteConfig: SiteConfig = {
+  ...templateSiteConfig,
+  name: "Claude Workflow Guides",
+  description: "Practical guides for automating your daily work with Claude, starting with a weekday to-do digest routine. For professionals who juggle email, chat and tickets.",
+  repoUrl: "https://github.com/harshit-docs-lab/claude-workflow-guides",
+  links: [
+    { label: "Get started", href: "/quickstart" },
+    { label: "Support", href: "https://github.com/harshit-docs-lab/claude-workflow-guides/issues/new" },
+    { label: "GitHub", href: "https://github.com/harshit-docs-lab/claude-workflow-guides" },
+    { label: "Changelog", href: "/changelog" },
+  ],
+};
