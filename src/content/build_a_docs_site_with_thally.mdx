@@ -1,0 +1,177 @@
+---
+title: How to build a documentation site with Thally
+description: A beginner's walkthrough on a Mac, from creating the site to publishing, including the obstacles I hit and how I fixed them.
+---
+ 
+By [Harshit Soni](https://www.linkedin.com/in/harshit-soni-858735218/)
+ 
+I built a small documentation site with Thally, a tool that turns files in a GitHub repository into a live docs website. My topic was a guide I had already written: a Claude Routine that sends a daily to-do digest every weekday morning. This article walks through the exact steps I followed, including the mistakes I made, so you can build a similar site without losing time on the same problems.
+ 
+- [Live site](https://claude-workflow-guides.thally.app/)
+- [Source repository](https://github.com/harshit-docs-lab/claude-workflow-guides/tree/main/src/content)
+
+## What you will build
+ 
+A three-page documentation site: an introduction, a quickstart, and one practical guide with troubleshooting. It is published at a `thally.app` address, and every push to GitHub updates it.
+ 
+## The idea in one paragraph: docs-as-code
+ 
+Your pages are plain text files (MDX, which is Markdown with a few extras) stored in a Git repository. You edit them on your computer, preview them, and push them to GitHub. Thally then rebuilds and publishes the site. Nothing goes live until you push, so you can experiment safely.
+ 
+## Prerequisites
+ 
+I used a Mac. You need:
+ 
+- A GitHub account
+- A Thally Cloud account at app.thally.io. Publishing your first site starts a one-time 7-day Cloud trial, so note the date.
+- VS Code, to edit the files
+- Git, to send your changes to GitHub
+- Node.js (the LTS version), to run the preview, check, and build commands
+The Thally quickstart says you do not need Node.js or a local checkout to publish the starter site. That is true, but you do need both as soon as you want to edit the content.
+ 
+On a fresh Mac, running `git --version` triggers an install of the command line developer tools. My download estimated about 42 minutes, so start it first and install Node.js while you wait.
+ 
+One more decision before you begin: the recommended setup asks you to give the Thally GitHub App access to **All repositories**. I have private repositories on my personal account, so I created a free GitHub organization and installed the app there instead. Its only repository is the new docs repo.
+ 
+## Step 1: Create the site in Thally Cloud
+ 
+1. Sign in at app.thally.io. A short onboarding survey asks for a project name, your role, and company size. It tailors guidance and does not limit what you can use.
+2. Select **Create a site**. Enter a site name, a one-line summary (what the product does and who the docs are for), and a `thally.app` address. Addresses allow lowercase letters, numbers, and hyphens.
+3. At **Docs source**, choose **Create a new docs repository**. Authorize Thally on GitHub, then install the Thally app on the account or organization that should own the repo.
+4. At **Product sources**, choose **I'll do this later**. Skip **Knowledge surfaces**. Both are optional.
+5. Review the settings and select **Publish site**.
+When the Home page shows **Live**, open **View live site**. You now have a working site, but it contains Thally's starter content (about ten sample pages).
+ 
+The new repository is private by default. Before you share it, make it public in the repository's **Settings**.
+ 
+## Step 2: Set up your computer
+ 
+Install VS Code, Git, and Node.js. Then open the terminal in VS Code (**Terminal > New Terminal**) and check each tool:
+ 
+```bash
+git --version
+node --version
+npm --version
+```
+ 
+Tell Git who you are, using your own details:
+ 
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+ 
+## Step 3: Clone the repository
+ 
+Cloning downloads a copy of the project to your computer so you can edit it.
+ 
+1. In VS Code, press Cmd + Shift + P and run **Git: Clone**.
+2. Choose **Clone from GitHub** and approve the sign-in in your browser. VS Code shows a permissions screen for its own GitHub access; read it before you authorize.
+3. Select your docs repository and pick a parent folder, such as your Desktop. VS Code creates the project folder inside it, so you do not need to create one first.
+4. Choose **Open** when VS Code offers to open the cloned repository.
+## Step 4: Preview the site locally
+ 
+Cloning gives you the project's own files but not the packages it depends on. Install them once, then start the preview:
+ 
+```bash
+npm install
+npm run dev
+```
+ 
+Open the **Local** address that the terminal prints in your browser. It is a private preview that only you can see. Saving a page updates it within a few seconds.
+ 
+To stop the preview, press **Control + C** (not Command + C) inside the terminal. Run `npm run dev` again to restart it.
+ 
+## Step 5: Understand the project
+ 
+The three places you will work in most are:
+ 
+| Location | What it controls |
+| --- | --- |
+| `src/content/*.mdx` | Your pages |
+| `docs.json` | Tabs, sidebar groups, and page order |
+| `public/` | Files visitors can download, such as images |
+ 
+The sidebar is built from `docs.json`. A page does not appear in the menu until it is listed there by its file name, without `.mdx`:
+ 
+```json
+"tabs": [
+  {
+    "tab": "Guides",
+    "groups": [
+      { "group": "Get started", "pages": ["introduction", "quickstart"] },
+      { "group": "Daily digest", "pages": ["daily-digest-guide"] }
+    ]
+  }
+]
+```
+ 
+## Step 6: Write your content
+ 
+Every page starts with a short block between two lines of three dashes. The first line of the file must be the opening dashes:
+ 
+```text
+---
+title: Quickstart
+description: Build your first daily digest routine in about five minutes.
+---
+ 
+Your page text starts here.
+```
+ 
+I replaced the starter's `introduction.mdx` and `quickstart.mdx` with my own, added a third page, and deleted the sample pages I did not need.
+ 
+To add an image, put the file in `public/images/` and reference it without the word `public`:
+ 
+```text
+![Short description of the image](/images/connectors.png)
+```
+ 
+To link to another page, use its file name: `[Quickstart](/quickstart)`.
+ 
+Before publishing screenshots, check them for private data. I cropped mine to show only the interface elements I was describing.
+ 
+## Step 7: Check, commit, and publish
+ 
+Run Thally's checker and a full build before you push:
+ 
+```bash
+npx --yes @thallylabs/cli@latest check
+npm run build
+```
+ 
+Both finished without errors for me. Then, in VS Code:
+ 
+1. Open **Source Control** and review the changed files.
+2. Write a short message and select **Commit**.
+3. Select **Sync Changes** to push to GitHub.
+Thally starts a new deployment automatically. Watch it under **Deployments** in the dashboard, then reload your live site with Cmd + Shift + R and click through every page, link, and image.
+ 
+## Obstacles I hit and how I fixed them
+ 
+| Obstacle | Cause | Fix |
+| --- | --- | --- |
+| `git --version` asked to install developer tools | Fresh Mac without Git | Let the install finish (it took a long time), then reopen the terminal |
+| Concern about giving the app access to all my repositories | The recommended path asks for All repositories | Created a free GitHub organization and installed the app there |
+| The top of a page appeared as a large green heading, and the title showed as Overview | The opening line of three dashes was missing, so the settings block was read as text | Make line 1 of the file exactly three dashes |
+| Images did not load | I had put the images folder inside `src/content` | Move it to `public/images` and link to `/images/name.png` |
+| A page and its links did not load | The file used underscores while some links and `docs.json` used hyphens | Use one naming style everywhere, then restart the preview |
+| My edits did not show up | An old preview was still running on port 3000 while the new one used another port | Open the address the terminal prints, and stop old servers |
+| A new image returned a 404 until I restarted | The preview did not pick up the new file in `public` | Restart the dev server and hard refresh the browser |
+| A red Next.js console error about a script tag in `layout.tsx` | Comes from the starter template's own code | Dismissed it. Pages still rendered, and `check` and `build` passed |
+ 
+## Result
+ 
+The site is live at [Claude-workflow-guides,thally.app](https://claude-workflow-guides.thally.app/), with its source at [GitHub](https://github.com/harshit-docs-lab/claude-workflow-guides). From a signed-in Thally account to a live starter site took only a few clicks. Most of my time went into the local setup and content work.
+ 
+## What I would tell you before you start
+ 
+- Install Git and Node.js first, and start the Git install early because it can be slow.
+- Decide how you will name pages and stay consistent in file names, `docs.json`, and links.
+- Pages go in `src/content`, images go in `public/images`.
+- Restart the preview after changing `docs.json` or adding files to `public`.
+- Run `check` and `build` before every push.
+
+## Questions?
+
+Got stuck somewhere? I probably did too, so please let me know. You can [open an issue](https://github.com/harshit-docs-lab/claude-workflow-guides/issues/new) on the repo, or start with the [Thally quickstart](https://docs.thally.io/quickstart). Happy building!

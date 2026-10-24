@@ -34,6 +34,15 @@
           "pages": ["daily_digest_guide"]
         }
       ]
+    },
+    {
+      "tab": "Article",
+      "groups": [
+        {
+          "group": "Tutorial",
+          "pages": ["build_a_docs_site_with_thally"]
+        }
+      ]
     }
   ]
 }
